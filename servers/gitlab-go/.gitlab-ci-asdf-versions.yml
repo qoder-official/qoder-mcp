@@ -1,0 +1,8 @@
+# DO NOT MANUALLY EDIT; Run ./scripts/update-asdf-version-variables.sh to update this
+variables:
+    GL_ASDF_GOLANG_VERSION: "1.24.3"
+    GL_ASDF_GOLANGCI_LINT_VERSION: "2.1"
+    GL_ASDF_GORELEASER_VERSION: "2.9"
+    GL_ASDF_PRE_COMMIT_VERSION: "4.2.0"
+    GL_ASDF_SHELLCHECK_VERSION: "0.10.0"
+    GL_ASDF_SHFMT_VERSION: "3.11.0"

@@ -1,0 +1,8 @@
+[settings]
+legacy_version_file = false
+
+[tools]
+# Please continue to use `.tool-versions` to specify tool versions, rather than adding them directly here.
+
+[plugins]
+# Use this section to configure the source of any custom mise/asdf plugin

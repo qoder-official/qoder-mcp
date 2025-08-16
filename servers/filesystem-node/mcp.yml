@@ -1,0 +1,7 @@
+id: filesystem-node
+name: Filesystem
+lang: node
+entry: node dist/index.js 
+args:
+  - . 
+skip_stdio_arg: true 

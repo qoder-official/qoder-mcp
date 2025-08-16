@@ -1,0 +1,36 @@
+{
+  "name": "qoder-mcp",
+  "version": "1.0.0",
+  "description": "Qoder MCP Server Orchestrator",
+  "private": true,
+  "scripts": {
+    "start": "node cli/index.js",
+    "setup": "node cli/index.js setup",
+    "list": "node cli/index.js list",
+    "compose:up": "docker-compose up",
+    "compose:build": "docker-compose build",
+    "compose:down": "docker-compose down --rmi all --volumes --remove-orphans",
+    "compose:node": "docker-compose up figma-node clickup-node sequential-thinking-node",
+    "compose:go": "docker-compose up github-go gitlab-go",
+    "compose:figma": "docker-compose up figma-node",
+    "compose:clickup": "docker-compose up clickup-node",
+    "compose:sequential-thinking": "docker-compose up sequential-thinking-node",
+    "compose:github": "docker-compose up github-go",
+    "compose:gitlab": "docker-compose up gitlab-go",
+    "test:servers": "node test/integration/test_servers.test.js"
+  },
+  "bin": {
+    "qoder-mcp": "cli/index.js"
+  },
+  "dependencies": {
+    "commander": "^12.0.0",
+    "fs-extra": "^11.2.0",
+    "js-yaml": "^4.1.0",
+    "shelljs": "^0.8.5",
+    "tr46": "^5.1.1",
+    "whatwg-url": "^14.2.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

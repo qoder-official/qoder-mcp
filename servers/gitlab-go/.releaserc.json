@@ -1,0 +1,10 @@
+{
+  "branches": [
+    "main"
+  ],
+  "plugins": [
+    "@gitlab/semantic-release-merge-request-analyzer",
+    "@gitlab/truncated-tags",
+    "@semantic-release/gitlab"
+  ]
+}

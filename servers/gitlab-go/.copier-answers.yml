@@ -1,0 +1,14 @@
+# This project was initially generated with
+# https://gitlab.com/gitlab-com/gl-infra/common-template-copier
+# See the project for instructions on how to update the project
+#
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: v1.31.0
+_src_path: https://gitlab.com/gitlab-com/gl-infra/common-template-copier.git
+ee_licensed: false
+golang: true
+initial_codeowners: '@fforster'
+jsonnet: false
+project_name: gitlab-mcp
+ruby: false
+terraform: false

@@ -1,0 +1,7 @@
+id: figma-node
+lang: node
+entry: figma-developer-mcp --stdio
+ports: [18421]
+env:
+  - key: FIGMA_API_KEY
+    as: env 

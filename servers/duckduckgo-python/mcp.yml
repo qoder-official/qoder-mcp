@@ -1,0 +1,4 @@
+id: duckduckgo-python
+name: DuckDuckGo Search
+lang: python
+entry: duckduckgo-mcp-server 

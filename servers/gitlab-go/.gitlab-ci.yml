@@ -1,0 +1,33 @@
+stages:
+  - validate
+  - release
+  - renovate_bot
+
+# Prevent double-pipelines for branch pipelines vs. merge request pipelines
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+      when: never
+    - if: $CI_COMMIT_BRANCH
+    - if: $CI_COMMIT_TAG
+
+variables:
+  GORELEASER_DOCKER_EXTRA_ARGS: '-e GORELEASER_HOMEBREW_TOKEN'
+
+include:
+  - local: .gitlab-ci-asdf-versions.yml
+
+  # This template should be included in all Infrastructure projects.
+  # It includes standard checks, gitlab-scanners, validations and release processes
+  # common to all projects using this template library.
+  # see https://gitlab.com/gitlab-com/gl-infra/common-ci-tasks/-/blob/main/README.md#templatesstandardyml
+  - project: 'gitlab-com/gl-infra/common-ci-tasks'
+    ref: v2.77  # renovate:managed
+    file: templates/standard.yml
+
+  # Runs golang standard tests, including tests, goreleaser, golangci-lint and go-mod-tidy
+  # see https://gitlab.com/gitlab-com/gl-infra/common-ci-tasks/-/blob/main/templates/golang.md
+  - project: 'gitlab-com/gl-infra/common-ci-tasks'
+    ref: v2.77  # renovate:managed
+    file: templates/golang.yml

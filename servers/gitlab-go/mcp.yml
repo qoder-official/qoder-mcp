@@ -1,0 +1,6 @@
+id: gitlab-go
+lang: go
+ports: []
+env:
+  - key: GITLAB_TOKEN
+    as: env 

@@ -1,0 +1,4 @@
+id: sequential-thinking-node
+name: Sequential Thinking
+lang: node
+entry: node --loader ts-node/esm index.ts 

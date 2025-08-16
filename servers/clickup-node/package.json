@@ -1,0 +1,12 @@
+{
+  "name": "qoder-clickup-mcp",
+  "version": "1.0.0",
+  "description": "ClickUp MCP server for Qoder-MCP.",
+  "main": "index.js",
+  "scripts": {
+    "start": "mcp-clickup --stdio"
+  },
+  "dependencies": {
+    "mcp-clickup": "*"
+  }
+} 

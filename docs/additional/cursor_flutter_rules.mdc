@@ -1,0 +1,57 @@
+FLUTTER PROJECT CONTRIBUTION RULES
+
+1. MINDSET & WORKFLOW
+   • Think → Verify → Act. Analyse the task, scan the codebase, and raise questions before editing.
+   • Make small, reviewable diffs; large refactors only when explicitly approved.
+   • Never break existing behaviour unless the ticket mandates it.
+   • Run `flutter analyze` and the full test suite before every commit.
+   • Stay on‑scope. Don’t optimise or refactor anything outside the ticket’s boundaries. If you see a worthwhile improvement, add a brief Recommendations note *after* the requested code—leave the code untouched unless asked.
+
+2. LOGGING & DIAGNOSTICS
+   • Preserve all existing print/debugPrint lines.
+   • Prefix any new log with “[FunctionName]”: `debugPrint('[fetchUser] start');`
+   • Prefer debugPrint in production code; use print only for throw‑away scripts.
+
+3. COMMENTS & READABILITY
+   • Do not delete existing comments.
+   • Default to single‑line comments; add concise multi‑line context only when essential or requested.
+   • Explain *why*, not just *what*, when a refactor needs commentary.
+   • Use cascade (`..`) and collection‑if/for to simplify, not obscure.
+
+4. NAMING, IMPORTS & FILES
+   • Default language is Dart.
+   • Follow SOLID and clean‑architecture boundaries.
+   • Files: `snake_case.dart`  Vars: `camelCase`  Classes: `PascalCase`.
+   • Re‑use existing symbols; never invent one without searching first.
+   • Keep import paths consistent; avoid relative‑path drift.
+   • If context is missing, stop and ask—never create placeholders that linger.
+
+5. UI & UX
+   • Follow Apple HIG for motion, spacing and hierarchy; note compliance in the PR.
+   • Preserve user flows unless the ticket says otherwise.
+   • No emojis in UI or code unless explicitly requested.
+
+6. TYPOGRAPHY & THEMING
+   • For SF Pro, set `useGoogleFonts: false`.
+   • Do not introduce `GoogleFonts` elsewhere without approval.
+
+7. SAFE‑REFACTOR CHECKLIST
+   • Keep public APIs, widget contracts, parameter order and defaults unchanged.
+   • Do not remove options, callbacks, or analytics events.
+   • Re‑run widget, integration and golden tests after edits.
+
+8. COLLABORATION & COMMUNICATION
+   • Surface ambiguity early—file names, rules, acceptance criteria, edge cases.
+   • Before opening a PR, post a bullet‑point change plan and tag owners of affected modules.
+   • Keep commit messages, PR titles and comments professional and concise.
+
+9. COMMIT ETIQUETTE
+   • One logical change per commit.
+   • Conventional header: `feat|fix|refactor(scope): short summary`.
+   • Use a `BREAKING CHANGE:` footer only with prior sign‑off.
+
+10. CURSOR‑SPECIFIC REMINDERS
+   • Cursor may suggest edits across many files—trim diffs to the agreed scope.
+   • After codegen, show the *diff* for confirmation; avoid full‑file dumps unless asked.
+   • No emojis or informal language in generated code or commentary unless explicitly requested.
+   • Ask for clarification rather than assuming intent when requirements are fuzzy.

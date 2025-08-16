@@ -1,0 +1,7 @@
+id: clickup-node
+lang: node
+entry: mcp-clickup --stdio
+ports: []
+env:
+  - key: CLICKUP_API_TOKEN
+  - key: CLICKUP_WORKSPACE_ID 

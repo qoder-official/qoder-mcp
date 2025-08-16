@@ -1,0 +1,12 @@
+{
+  "name": "qoder-figma-mcp",
+  "version": "1.0.0",
+  "description": "Figma MCP server for Qoder-MCP.",
+  "private": true,
+  "scripts": {
+    "start": "figma-developer-mcp --stdio"
+  },
+  "dependencies": {
+    "figma-developer-mcp": "*"
+  }
+} 

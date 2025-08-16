@@ -1,0 +1,176 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+version: 2
+before:
+  hooks:
+    - go mod tidy
+builds:
+  - binary: "gitlab-mcp"
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w -X '{{.ModulePath}}/lib/build.version={{.Version}}' -X '{{.ModulePath}}/lib/build.commit={{.Commit}}' -X '{{.ModulePath}}/lib/build.date={{.Date}}'
+
+archives:
+  - name_template: >-
+      {{ .ProjectName }}_
+      {{- .Version }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+
+dockers:
+  - image_templates:
+      - "{{ .Env.CI_REGISTRY_IMAGE }}:latest-amd64"
+      - "{{ .Env.CI_REGISTRY_IMAGE }}:{{ .Tag }}-amd64"
+      - "{{ .Env.CI_REGISTRY_IMAGE }}:v{{ .Major }}.{{ .Minor }}-amd64"
+    goos: linux
+    goarch: amd64
+    use: buildx
+    build_flag_templates:
+      - "--platform=linux/amd64"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+
+  - image_templates:
+      - "{{ .Env.CI_REGISTRY_IMAGE }}:latest-arm64"
+      - "{{ .Env.CI_REGISTRY_IMAGE }}:{{ .Tag }}-arm64"
+      - "{{ .Env.CI_REGISTRY_IMAGE }}:v{{ .Major }}.{{ .Minor }}-arm64"
+    goos: linux
+    goarch: arm64
+    use: buildx
+    build_flag_templates:
+      - "--platform=linux/arm64"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+
+# Create multi-architecture manifests
+docker_manifests:
+  - name_template: "{{ .Env.CI_REGISTRY_IMAGE }}:latest"
+    image_templates:
+      - "{{ .Env.CI_REGISTRY_IMAGE }}:{{ .Tag }}-amd64"
+      - "{{ .Env.CI_REGISTRY_IMAGE }}:{{ .Tag }}-arm64"
+  - name_template: "{{ .Env.CI_REGISTRY_IMAGE }}:{{ .Tag }}"
+    image_templates:
+      - "{{ .Env.CI_REGISTRY_IMAGE }}:{{ .Tag }}-amd64"
+      - "{{ .Env.CI_REGISTRY_IMAGE }}:{{ .Tag }}-arm64"
+  - name_template: "{{ .Env.CI_REGISTRY_IMAGE }}:v{{ .Major }}.{{ .Minor }}"
+    image_templates:
+      - "{{ .Env.CI_REGISTRY_IMAGE }}:{{ .Tag }}-amd64"
+      - "{{ .Env.CI_REGISTRY_IMAGE }}:{{ .Tag }}-arm64"
+
+release:
+  gitlab:
+    owner: "{{ .Env.CI_PROJECT_NAMESPACE }}"
+    name: "{{ .Env.CI_PROJECT_NAME }}"
+  mode: append
+
+checksum:
+  name_template: "checksums.txt"
+
+changelog:
+  sort: asc
+  use: gitlab
+  filters:
+    exclude:
+      - '^test\b'
+      - '^ci\b'
+
+gitlab_urls:
+  # Use the Generic Package Registry feature in GitLab
+  # https://docs.gitlab.com/ee/user/packages/package_registry/index.html
+  use_package_registry: true
+  api: "{{ .Env.CI_SERVER_URL }}"
+  download: "{{ .Env.CI_SERVER_URL }}"
+
+docker_signs:
+  - id: keyless_cosign
+    cmd: cosign
+    args:
+      - sign
+      - "${artifact}"
+      - "--yes"
+    artifacts: all
+    ids:
+      - docker
+    output: true
+
+# https://goreleaser.com/customization/sign/
+signs:
+  - id: keyless_cosign
+    cmd: cosign
+    args:
+      - "sign-blob"
+      - "--output-signature=${signature}"
+      - "--bundle=${certificate}"  # We choose to write the bundle in the certificate field
+      - "${artifact}"
+      - "--yes"
+    output: true
+    artifacts: archive
+    signature: '{{ trimsuffix (trimsuffix .Env.artifact ".zip") ".tar.gz" }}.sig'
+    certificate: '{{ trimsuffix (trimsuffix .Env.artifact ".zip") ".tar.gz" }}.bundle' # Actually the bundle, not the certificate
+
+# Publish syft SBOMs
+# https://goreleaser.com/customization/sbom/
+sboms:
+  - artifacts: archive
+
+brews:
+  - name: gitlab-mcp
+    homepage: "https://gitlab.com/fforster/gitlab-mcp"
+    description: "A Model Context Protocol (MCP) server for GitLab, enabling Claude to interact directly with your GitLab instance."
+    license: "MIT"
+
+    # The repository to push the formula to
+    repository:
+      owner: fforster
+      name: homebrew-gitlab-mcp
+      branch: main
+      token: "{{ .Env.GORELEASER_HOMEBREW_TOKEN }}"
+
+    # Directory inside the repository to store the formula
+    directory: Formula
+
+    # Git author for the commit
+    commit_author:
+      name: "Florian Forster"
+      email: "fforster+goreleaser@gitlab.com"
+
+    commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
+
+    # Installation instructions
+    install: |
+      bin.install "gitlab-mcp"
+
+    dependencies:
+      - name: ca-certificates
+
+    # Caveats to display after installation
+    caveats: |
+      For use with Claude Desktop, add the following to your Claude Desktop configuration file:
+
+      {
+        "mcpServers": {
+          "GitLab": {
+            "command": "gitlab-mcp",
+            "env": {
+              "GITLAB_TOKEN": "your_gitlab_token"
+            }
+          }
+        }
+      }
+
+      The configuration file is typically located at:
+      - macOS: ~/Library/Application Support/Claude/claude_desktop_config.json
+      - Linux: ~/.config/Claude/claude_desktop_config.json

@@ -1,0 +1,9 @@
+id: github-go
+lang: go
+entry: /server
+args: ["stdio"]
+ports: []
+env:
+  - key: GITHUB_PERSONAL_ACCESS_TOKEN
+    as: env
+    required: true 

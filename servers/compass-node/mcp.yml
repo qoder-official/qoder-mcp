@@ -1,0 +1,4 @@
+id: compass-node
+name: Compass
+lang: node
+entry: node build/index.js 

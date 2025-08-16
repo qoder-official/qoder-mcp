@@ -1,0 +1,4 @@
+id: desktop-commander-node
+name: Desktop Commander
+lang: node
+entry: ts-node src/index.ts

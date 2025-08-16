@@ -1,0 +1,7 @@
+id: postman-node
+lang: node
+entry: node build/index.js
+ports: []
+env:
+  - key: POSTMAN_API_KEY
+    as: env 

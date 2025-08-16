@@ -1,0 +1,256 @@
+version: "2"
+run:
+  concurrency: 4
+  issues-exit-code: 1
+  tests: true
+  allow-parallel-runners: false
+
+linters:
+  default: all
+  disable:
+    - depguard
+    - dupl
+    - exhaustruct
+    - funcorder
+    - gochecknoglobals
+    - gochecknoinits
+    - gocritic
+    - lll
+    - mnd
+    - nilnil
+    - nolintlint
+    - nonamedreturns
+    - paralleltest
+    - perfsprint
+    - prealloc
+    - staticcheck
+    - tagalign
+    - tagliatelle
+    - testpackage
+    - unparam
+    - varnamelen
+
+  settings:
+    cyclop:
+      max-complexity: 16
+      package-average: 0
+    dogsled:
+      max-blank-identifiers: 2
+    dupl:
+      threshold: 150
+    errcheck:
+      check-type-assertions: false
+      check-blank: false
+    errorlint:
+      errorf: true
+      asserts: true
+      comparison: true
+    exhaustive:
+      default-signifies-exhaustive: false
+    forbidigo:
+      forbid:
+        - pattern: ^print.*$
+    funlen:
+      lines: 70
+      statements: 40
+    gocognit:
+      min-complexity: 16
+    goconst:
+      match-constant: true
+      min-len: 3
+      min-occurrences: 3
+      numbers: false
+      min: 3
+      max: 3
+      ignore-calls: true
+    gocritic:
+      disabled-checks:
+        - paramTypeCombine
+      enabled-tags:
+        - performance
+        - diagnostic
+        - opinionated
+        - style
+      disabled-tags:
+        - experimental
+      settings:
+        hugeParam:
+          sizeThreshold: 80
+        rangeExprCopy:
+          sizeThreshold: 512
+          skipTestFuncs: true
+        rangeValCopy:
+          sizeThreshold: 32
+          skipTestFuncs: true
+    gocyclo:
+      min-complexity: 16
+    godot:
+      scope: declarations
+      capital: false
+    godox:
+      keywords:
+        - NOTE
+        - OPTIMIZE
+        - HACK
+    gomodguard:
+      blocked:
+        local-replace-directives: false
+    gosec:
+      excludes:
+        - G307
+    govet:
+      disable:
+        - fieldalignment
+        - shadow
+      enable-all: true
+      settings:
+        printf:
+          funcs:
+            - (github.com/golangci/golangci-lint/pkg/logutils.Log).Infof
+            - (github.com/golangci/golangci-lint/pkg/logutils.Log).Warnf
+            - (github.com/golangci/golangci-lint/pkg/logutils.Log).Errorf
+            - (github.com/golangci/golangci-lint/pkg/logutils.Log).Fatalf
+    lll:
+      line-length: 160
+      tab-width: 4
+    makezero:
+      always: false
+    nakedret:
+      max-func-lines: 30
+    nestif:
+      min-complexity: 4
+    nlreturn:
+      block-size: 2
+    revive:
+      rules:
+        - name: package-comments
+          severity: warning
+          disabled: true
+    staticcheck:
+      checks:
+        - -ST1000
+        - all
+      initialisms:
+        - ACL
+        - API
+        - ASCII
+        - CPU
+        - CSS
+        - DNS
+        - EOF
+        - GUID
+        - HTML
+        - HTTP
+        - HTTPS
+        - ID
+        - IP
+        - JSON
+        - QPS
+        - RAM
+        - RPC
+        - SLA
+        - SMTP
+        - SQL
+        - SSH
+        - TCP
+        - TLS
+        - TTL
+        - UDP
+        - UI
+        - GID
+        - UID
+        - UUID
+        - URI
+        - URL
+        - UTF8
+        - VM
+        - XML
+        - XMPP
+        - XSRF
+        - XSS
+      http-status-code-whitelist:
+        - "200"
+        - "400"
+        - "404"
+        - "500"
+    tagliatelle:
+      case:
+        rules:
+          json: snake
+          yaml: snake
+        use-field-name: true
+    whitespace:
+      multi-if: false
+      multi-func: false
+    wsl:
+      strict-append: true
+      allow-assign-and-call: true
+      allow-assign-and-anything: false
+      allow-multiline-assign: true
+      force-case-trailing-whitespace: 0
+      allow-trailing-comment: false
+      allow-separated-leading-comment: false
+      allow-cuddle-declarations: false
+      force-err-cuddling: false
+      force-short-decl-cuddling: false
+
+  exclusions:
+    generated: lax
+    rules:
+      - linters:
+          - dupl
+        path: ^itests/.*
+      - linters:
+          - cyclop
+          - funlen
+          - gocognit
+          - gocyclo
+          - maintidx
+        path: _test.go$
+        source: ^func (Benchmark|Example|Fuzz|Test)[A-Z]
+      - path: _test.go$
+        linters:
+          - err113
+      - path: (.+)\.go$
+        text: Error return value of .((os\.)?std(out|err)\..*|.*Close|.*Flush|os\.Remove(All)?|.*print(f|ln)?|os\.(Un)?Setenv). is not checked
+      - path: (.+)\.go$
+        text: func name will be used as test\.Test.* by other packages, and that stutters; consider calling this
+      - path: (.+)\.go$
+        text: (possible misuse of unsafe.Pointer|should have signature)
+      - path: (.+)\.go$
+        text: ineffective break statement. Did you mean to break out of the outer loop
+      - path: (.+)\.go$
+        text: Use of unsafe calls should be audited
+      - path: (.+)\.go$
+        text: Subprocess launch(ed with variable|ing should be audited)
+      - path: (.+)\.go$
+        text: G104
+      - path: (.+)\.go$
+        text: (Expect directory permissions to be 0750 or less|Expect file permissions to be 0600 or less)
+      - path: (.+)\.go$
+        text: Potential file inclusion via variable
+
+    paths:
+      - node_modules
+      - third_party$
+      - builtin$
+      - examples$
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  settings:
+    gofmt:
+      simplify: true
+    goimports:
+      local-prefixes:
+        - gitlab.com/fforster/gitlab-mcp
+
+  exclusions:
+    generated: lax
+    paths:
+      - node_modules
+      - third_party$
+      - builtin$
+      - examples$

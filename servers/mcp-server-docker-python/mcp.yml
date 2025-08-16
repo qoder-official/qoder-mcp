@@ -1,0 +1,7 @@
+id: mcp-server-docker-python
+name: Docker
+lang: python
+entry: mcp-server-docker
+env:
+  - key: DOCKER_HOST
+    as: env 

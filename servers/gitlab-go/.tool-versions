@@ -1,0 +1,8 @@
+# Note: Install plugins by running `mise install`
+golang 1.24.3 # datasource=golang-version depName=golang/go
+golangci-lint 2.1 # datasource=github-releases depName=golangci/golangci-lint
+goreleaser 2.9 # datasource=github-releases depName=goreleaser/goreleaser
+pre-commit 4.2.0 # datasource=github-releases depName=pre-commit/pre-commit
+python system
+shellcheck 0.10.0 # datasource=github-releases depName=koalaman/shellcheck
+shfmt 3.11.0 # datasource=github-releases depName=mvdan/sh

@@ -1,0 +1,5 @@
+id: better-fetch-node
+lang: node
+entry: node dist/server.js
+ports: []
+env: [] 
